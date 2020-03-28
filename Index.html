@@ -118,6 +118,23 @@
     //Openweather API Key
     var APIkey = "166a433c57516f51dfab1f7edaed8413";
     
+
+    function getUV(lat,long)
+    {
+      var queryUV = "http://api.openweathermap.org/data/2.5/uvi?appid=" + APIkey + "&lat="+ lat +"&lon="+ long;
+      $.ajax({
+            url: queryUV,
+            method: "GET"
+        }).then(function(response)
+        {
+          var UVval = response.value;
+          $("#uvIndex").text("UV Index = " + UVval);
+        })
+    }
+
+
+
+    
     function getweather(city)
     {
       //Set variable for search url
@@ -125,11 +142,12 @@
       //var queryURL1 ="api.openweathermap.org/data/2.5/weather?q=" + city;
       //queryURL for weather forecast
       var queryURL2 = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIkey;
+
       $.ajax({
             url: queryURL2,
             method: "GET"
         }).then(function(response)
-        {   //console.log(response)
+        {   console.log(response)
             var data = response.list[0];
             var tempData = data.main.temp;
             
@@ -137,29 +155,21 @@
             
             var windData = data.wind.speed;
             var lat = response.city.coord.lat;
-            var long = response.city.coord.long;
+            var long = response.city.coord.lon;
             
             $("#temperature").text("Temperature (Farenheight) = " + tempData);
             $("#humidity").text("Humidity(%)= " + humidData);
             $("#windSpeed").text("Wind(km/h) =" + windData);
-            return lat,long
+            console.log(lat)
+            console.log(long)
+            getUV(lat,long);
+            
         })
-      console.log(lat, long)
+      
 
     }
 
-    function getUV(lat,long)
-    {
-      var queryUV = "http://api.openweathermap.org/data/2.5/uvi?appid=" + APIkey + "&lat="+ lat +"&lon="+ long;
-      $.ajax({
-            url: queryURL2,
-            method: "GET"
-        }).then(function(response)
-        {
-          var UVval = response.value;
-          $("#UVindex").text("UV Index = " + UVval);
-        })
-    }
+    
 
 
 
@@ -167,14 +177,17 @@
     //Event Listener for Search Button
     $("#searchButton").on("click",function()
     {   
+      
         
+      //Jquery variables
+      var city = $("#searchTerm").val();
+      
+      
+
+      $("#weatherToday").append(city);
         
-        //Jquery variables
-        var city = $("#searchTerm").val();
-        $("#weatherToday").append(city);
-        
-        getweather(city);
-        //getUV(lat,long);
+      getweather(city);
+      //getUV(lat,long);
         
 
            
