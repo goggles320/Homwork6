@@ -25,12 +25,12 @@
                     </div>
                 </div>
                 <!--Sub-Navigation bar which saves the cities the user has searched-->
-                <ul class="list-group">
-                    <li class="list-group-item">Search City 1</li>
-                    <li class="list-group-item">Search City 2</li>
-                    <li class="list-group-item">Search City 3</li>
-                    <li class="list-group-item">Search City 4</li>
-                    <li class="list-group-item">Search City 5</li>
+                <ul class="historyCity">
+                    <li class="list-group-item city" id="searchCity">Search History</li>
+                    <!--<li class="list-group-item city" id="searchCity2">Search City 2</li>
+                    <li class="list-group-item city" id="searchCity3">Search City 3</li>
+                    <li class="list-group-item city" id="searchCity4">Search City 4</li>
+                    <li class="list-group-item city" id="searchCity5">Search City 5</li>-->
                 </ul>
             </div>
             <div class="col-md-9">
@@ -51,7 +51,7 @@
                     <div class="card">
                       <img src="./assets/cloud.png" class="card-img-top" alt="sun">
                       <div class="card-body">
-                        <h5 class="card-title">Today</h5>
+                        <h5 class="day0">Today</h5>
                         <p class="card-text">Weather Information</p>
                       </div>
                       <div class="card-footer">
@@ -149,6 +149,7 @@
         }).then(function(response)
         {   console.log(response)
             var data = response.list[0];
+            var date = data.dt_txt.split(" ")[0];
             var tempData = data.main.temp;
             
             var humidData = data.main.humidity;
@@ -158,8 +159,8 @@
             var long = response.city.coord.lon;
             
             $("#temperature").text("Temperature (Farenheight) = " + tempData);
-            $("#humidity").text("Humidity(%)= " + humidData);
-            $("#windSpeed").text("Wind(km/h) =" + windData);
+            $("#humidity").text("Humidity(%) = " + humidData);
+            $("#windSpeed").text("Wind(km/h) = " + windData);
             console.log(lat)
             console.log(long)
             getUV(lat,long);
@@ -179,15 +180,24 @@
     {   
       
         
-      //Jquery variables
+      //Jquery variables & set to localstorage
       var city = $("#searchTerm").val();
+      localStorage.setItem("storedCity",city);
+      
       
       
 
       $("#weatherToday").append(city);
         
       getweather(city);
-      //getUV(lat,long);
+      //retrieve storedCity from local storage
+      var storedCity = localStorage.getItem("storedCity");
+      //Create new list item for historical searched city
+      var history = $("<li>");
+      history.addClass("class",list-group-item, "id", searchCity);
+      history.text(storedCity);
+      $(".historyCity").append(history);
+      
         
 
            
@@ -196,7 +206,7 @@
     
     
     </script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 </body>
 </html>
