@@ -52,7 +52,7 @@
                       <img src="./assets/cloud.png" class="card-img-top" alt="sun">
                       <div class="card-body">
                         <h5 class="day0">Today</h5>
-                        <p class="card-text">Weather Information</p>
+                        <p class="cardText">Weather Information</p>
                       </div>
                       <div class="card-footer">
                         <small class="text-muted">Last updated 3 mins ago</small>
@@ -170,7 +170,44 @@
 
     }
 
-    
+    function forecast(city)
+    {
+      var queryURL2 = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIkey;
+      //Grab data from Openweather
+      $.ajax({
+            url: queryURL2,
+            method: "GET"
+        }).then(function(response)
+        {   //console.log(response)
+            //counter for keeping track of forecasted days
+            counter = 0;
+            //Increment by 8 each time as results are in 3 hour blocks, 8x3 = 24. Hence we take every 8th result for each day
+            for (var i=0; i<33; i=i+8)
+            { 
+              var data = response.list[i];
+              console.log(data)
+              //Date
+              var date = data.dt_txt.split(" ")[0];
+              console.log(date)
+              //Weather thumbnail - sunny/rain/cloudy etc.
+              var thumbnail = data.weather.main;
+              //Temperature
+              var temperature= data.main.temp;
+              //Humidity
+              var humidData = data.main.humidity;
+              day = "day"+counter;
+              console.log(day)
+              $(".day0").text(date);
+              //Push data to 
+              //$("#temperature").text("Temperature (Farenheight) = " + tempData);
+              //$("#humidity").text("Humidity(%) = " + humidData);
+              //$("#windSpeed").text("Wind(km/h) = " + windData);
+              counter++;
+              console.log(counter)
+            }
+        })
+
+    }
 
 
 
@@ -182,7 +219,7 @@
         
       //Jquery variables & set to localstorage
       var city = $("#searchTerm").val();
-      localStorage.setItem("storedCity",city);
+      //localStorage.setItem("storedCity",city);
       
       
       
@@ -190,13 +227,14 @@
       $("#weatherToday").append(city);
         
       getweather(city);
+      forecast(city);
       //retrieve storedCity from local storage
-      var storedCity = localStorage.getItem("storedCity");
+      /*var storedCity = localStorage.getItem("storedCity");
       //Create new list item for historical searched city
       var history = $("<li>");
       history.addClass("class",list-group-item, "id", searchCity);
       history.text(storedCity);
-      $(".historyCity").append(history);
+      $(".historyCity").append(history);*/
       
         
 
