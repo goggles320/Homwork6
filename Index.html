@@ -51,8 +51,11 @@
                     <div class="card">
                       <img src="./assets/cloud.png" class="card-img-top" alt="sun">
                       <div class="card-body">
-                        <h5 class="day0">Today</h5>
-                        <p class="cardText">Weather Information</p>
+                        <h5 class="forecastDay">Today</h5>
+                        <p id = "date">Weather Information</p>
+                        <p id = "thumbnail"></p>
+                        <p id = "forecastTemp"></p>
+                        <p id = "forecastHumid"></p>
                       </div>
                       <div class="card-footer">
                         <small class="text-muted">Last updated 3 mins ago</small>
@@ -173,6 +176,7 @@
     function forecast(city)
     {
       var queryURL2 = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIkey;
+      var array = [];
       //Grab data from Openweather
       $.ajax({
             url: queryURL2,
@@ -185,29 +189,44 @@
             for (var i=0; i<33; i=i+8)
             { 
               var data = response.list[i];
-              console.log(data)
+              //console.log(data)
               //Date
               var date = data.dt_txt.split(" ")[0];
-              console.log(date)
+              //console.log(date)
               //Weather thumbnail - sunny/rain/cloudy etc.
-              var thumbnail = data.weather.main;
+              var thumbnailTemp = data.weather[0];
+              var thumbnail = thumbnailTemp.main;
+              //console.log(thumbnail)
               //Temperature
-              var temperature= data.main.temp;
+              var forecastTemp= data.main.temp;
               //Humidity
-              var humidData = data.main.humidity;
-              day = "day"+counter;
-              console.log(day)
-              $(".day0").text(date);
-              //Push data to 
-              //$("#temperature").text("Temperature (Farenheight) = " + tempData);
-              //$("#humidity").text("Humidity(%) = " + humidData);
-              //$("#windSpeed").text("Wind(km/h) = " + windData);
-              counter++;
-              console.log(counter)
+              var forecastHumid = data.main.humidity;
+              
+              //create array to store all the info above
+              
+              var weatherObj = {
+                  dateKey: date,
+                  image: thumbnail,
+                  temp: forecastTemp,
+                  humidity: forecastHumid};
+              
+              //Saves the 5 days forecasted data into one array with 5 objects (1 object corresponding to each day)
+              array.push(weatherObj);
+              console.log(text(array[0].weatherObj))
+              
             }
         })
+        //Go through the array by iterating 5 times and populate one html card and append the other 4. 
+        /*for (var j=0;j<array.length;j++)
+        {
+          $("#date").text(array[i].weatherObj.dateKey);
+          $("#thumbnail").text(array[i].weatherObj.thumbnail);
+          $("#forecastTemp").text(array[i].weatherObj.temp);
+          $("#forecastHumid").text(array[i].weatherObj.humidity);
+          console.log(array[i].weatherObj.dataKey)*/
+        }
 
-    }
+    //}
 
 
 
